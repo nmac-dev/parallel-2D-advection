@@ -1,0 +1,6 @@
+# Specification Parameters
+maxQueueLength      20
+numServicePoints    3
+closingTime         100
+
+# Additional Parameters

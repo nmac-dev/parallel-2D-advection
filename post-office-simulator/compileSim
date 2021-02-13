@@ -1,0 +1,3 @@
+#!/bin/sh
+## compile ##
+gcc -ansi -I./src -c ./src.simQ.c ./bin/simQ.o

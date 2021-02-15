@@ -1,12 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /*      Prototypes      */
-extern int outputResultsFile(char *fileName, ) {
-    FILE *outputFile;
-    if( ( outputFile = fopen(fileName, 'w')) != NULL ) {
-
-    } 
-    else {
-        fprint
-    } 
-} 
+extern char processInputFile(char *ptFileName) {}
+extern int outputResultsFile(char *ptFileName, char *ptResult) {}

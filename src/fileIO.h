@@ -2,6 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/*      Prototypes      */
+/*      Function Prototypes      */
 extern int* getInputFileValues(char *pName);
-/* extern int outputResultsFile(char *pFileName, char *ptResult) */
+void writeOutputFile(char *fileOut, int *inputParams, int *outputParams);

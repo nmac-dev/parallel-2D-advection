@@ -3,5 +3,5 @@
 #include <string.h>
 
 /*      Prototypes      */
-extern char processInputFile(char *ptFileName) {}
-extern int outputResultsFile(char *ptFileName, char *ptResult) {}
+extern int* getInputFileValues(char *pName);
+/* extern int outputResultsFile(char *pFileName, char *ptResult) */

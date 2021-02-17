@@ -4,23 +4,42 @@ int main(int argc, char **argv) {
 
     /* validate CL arguments size */
     if (argc != 4) {
-        printf("Error: command line expects three arguments...\n [InputFile][NumberOfSimulations][OutputFile]\n");
+        printf("%s\n%s\n", 
+                "Error: command line expects three arguments...",
+                "[InputFile][NumberOfSimulations][OutputFile]");
         exit(EXIT_FAILURE);
     }
 
-    /*   load CL arguments  *
-    char fileIn[]    = argv[1],
-         fileOut[]   = argv[3];
-    int  numSims     = argv[2];*/
+    /*   load CL arguments  */
+    char *fileIn    = argv[1],
+         *fileOut   = argv[3];
+    int  numSims    = atoi(argv[2]);
 
-
-    char fileIn[]    = "testInput.txt",
-         fileOut[]   = "outputResult.txt";
-    int  numSims     = 1000;
+    /*  GSL true random number setup   */
+    const gsl_rng_type*     T;
+	gsl_rng*                rndNum;
+	gsl_rng_env_setup();
+	T       = gsl_rng_default;
+	rndNum  = gsl_rng_alloc(T);
+	gsl_rng_set(rndNum, time(0));
 
     /* Load parameters from the input file */
     int *inputParams = getInputFileValues(fileIn);
-    int *outputParams[5];
+
+    /************** end of main after working   
+    /*  Run the simulation(s), 
+        loading the results into the array *
+    
+
+    int *outputParams = runSim(inputParams, gsl_rng *rndNum, numSims);
+
+    writeOutputFile(fileOut, inputParams, outputParams);
+                    ********************/
+
+    /*  free gsl memory     */
+    gsl_rng_free(rndNum);
+
+/************* sim below here ****************/
 
     /*  input file parameter values */
     int maxQueueLength      = inputParams[0],
@@ -28,6 +47,7 @@ int main(int argc, char **argv) {
         closingTime         = inputParams[2];
 
     /*  output file parameter values */
+    int outputParams[]      = {0, 0, 0, 0, 0,};
     int csmrFulfilled       = 0,
         csmrUnfulfilled     = 0,
         csmrTimedOut        = 0,
@@ -35,23 +55,22 @@ int main(int argc, char **argv) {
         timePostClosing     = 0;
 
     
-    int i, 
-        j,
+    int i, j,
         singleSim,
         clock,
         LP,
         queue[maxQueueLength],
         servicePoint[numServicePoints];
 
+    /*  1 iteration == 1 simulation */
     for (singleSim = 0; singleSim < numSims; singleSim++) {
 
         clock = 0;
         LP = maxQueueLength;
-        while(clock < closingTime) {
+        /* Loop until the single simulation is complete */
+        while(clock < closingTime && servicePoint[numServicePoints] < 0) {
 
-            
-
-            /** service point management */
+            /********************* service point management */
             for(i = 0; i < numServicePoints; i++) {
                 
                 /* random time determines service completion */
@@ -87,20 +106,27 @@ int main(int argc, char **argv) {
         }
     }
     
-
-    
     /* output simulation result */
-    outputParams[0] = &csmrFulfilled;
-    outputParams[1] = &csmrUnfulfilled;
-    outputParams[2] = &csmrTimedOut;
-    outputParams[3] = &averageWaitTime;
-    outputParams[4] = &timePostClosing;
-    writeOutputFile(fileOut, inputParams, *outputParams);
+    outputParams[0] = csmrFulfilled;
+    outputParams[1] = csmrUnfulfilled;
+    outputParams[2] = csmrTimedOut;
+    outputParams[3] = averageWaitTime;
+    outputParams[4] = timePostClosing;
+    if (numSims > 1) {
+        for(i = 0; i < 5; i++){
+            /*outputParams[i] = (outputParams[i] / numSims);*/
+        }
+    }
+    writeOutputFile(fileOut, inputParams, outputParams);
 
     
     /* outputResultsFile("outputFile.txt", simQResults); */
 
     exit(EXIT_SUCCESS);
+}
+
+int *runSim(int *inputParams, gsl_rng *rndNum, int* numSims) {
+
 }
 
 int genRand() {

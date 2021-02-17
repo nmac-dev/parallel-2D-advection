@@ -1,19 +1,19 @@
-The simulation input parameters
+### The simulation input parameters
 
-maxQueueLength: 20
+20		| maxQueueLength
 
-numServicePoints: 3
+3		| numServicePoints
 
-closingTime: 100
+100		| closingTime
 
-# The  simulation output parameters
+### The  simulation output parameters
 
-Number of fulfilled customers: 0
+0		| Number of fulfilled customers
 
-Number of unfulfilled customers: 0
+0		| Number of unfulfilled customers
 
-Number of timed-out customers: 0
+0		| Number of timed-out customers
 
-Average time for fulfilled customers: -1474980894
+0		| Average time for fulfilled customers
 
-Time it to serve all customers from closing: 0
+0		| Time it to serve all customers from closing

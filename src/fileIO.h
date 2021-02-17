@@ -3,5 +3,5 @@
 #include <string.h>
 
 /*      Function Prototypes      */
-extern int* getInputFileValues(char *pName);
-void writeOutputFile(char *fileOut, int *inputParams, int *outputParams);
+extern int* getInputFileValues(char *);
+void writeOutputFile(char *, int *, int *);

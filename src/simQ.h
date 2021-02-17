@@ -6,4 +6,5 @@
 #include "fileIO.h"
 
 /*      Function Prototypes      */
+int *runSim(int *, gsl_rng *, int *);
 int genRand();

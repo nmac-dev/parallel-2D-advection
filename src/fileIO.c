@@ -1,9 +1,9 @@
 #include "fileIO.h"
 
 
-int* getInputFileValues(char *fileIn) {
+int *getInputFileValues(char *fileIn) {
 
-    FILE *fileP;
+    FILE        *fileP;
     char        paramName[20];
     static int  paramValues[4];
 
@@ -39,20 +39,20 @@ void writeOutputFile(char *fileOut, int *inputParams, int *outputParams) {
     }
 
     /* Write Input parameters to file */
-    fprintf(fileP, "%s\n\n%s: %d\n\n%s: %d\n\n%s: %d\n\n",
-                    "The simulation input parameters",
-                    "maxQueueLength",      inputParams[0],
-                    "numServicePoints",    inputParams[1],
-                    "closingTime",         inputParams[2]);
+    fprintf(fileP, "%s\n\n%d\t\t| %s\n\n%d\t\t| %s\n\n%d\t\t| %s\n\n",
+                    "### The simulation input parameters",
+                    inputParams[0],     "maxQueueLength",   
+                    inputParams[1],     "numServicePoints",
+                    inputParams[2],     "closingTime");
 
     /* Write Output parameters to file */
-    fprintf(fileP, "%s\n\n%s: %d\n\n%s: %d\n\n%s: %d\n\n%s: %d\n\n%s: %d\n",
-                    "# The  simulation output parameters",
-                    "Number of fulfilled customers",                outputParams[0],
-                    "Number of unfulfilled customers",              outputParams[1],
-                    "Number of timed-out customers",                outputParams[2],
-                    "Average time for fulfilled customers",         outputParams[3],
-                    "Time it to serve all customers from closing",  outputParams[4]);
+    fprintf(fileP, "%s\n\n%d\t\t| %s\n\n%d\t\t| %s\n\n%d\t\t| %s\n\n%d\t\t| %s\n\n%d\t\t| %s\n",
+                    "### The  simulation output parameters",
+                    outputParams[0],    "Number of fulfilled customers",
+                    outputParams[1],    "Number of unfulfilled customers",
+                    outputParams[2],    "Number of timed-out customers",
+                    outputParams[3],    "Average time for fulfilled customers",
+                    outputParams[4],    "Time it to serve all customers from closing");
     /* close stream */
     fclose(fileP);
 }

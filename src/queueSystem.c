@@ -120,3 +120,16 @@ void lrsArray(int array[][2], int position) {
     }
     array[0][0] = -1;
 }
+
+/** counts each customer in the queue **/
+int countCsmrQueue(int csmrQueue[][2], int maxQueueLength) {
+
+    int i       =0,
+        counter =0;
+    for (i = 0; i < maxQueueLength; i++) {
+        if(csmrQueue[i][0] > -1) {
+            csmrQueue ++;
+        }
+    }
+    return counter;
+}

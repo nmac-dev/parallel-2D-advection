@@ -27,16 +27,23 @@ int main(int argc, char **argv) {
 
     /* Load parameters from the input file */
     int *inputParams            = getInputFileValues(fileIn);
-    static int outputParams[]   = {0, 0, 0, 0, 0};
+    static int outputParams[]   = {0, 0, 0, 0, 0},
+               singleOutputs[]   = {0, 0, 0, 0, 0, 0};
+    
+    if (numSims == 1) {
+        setupSingleOutput(fileOut, inputParams);
+    }
 
     /***    Run Simulations     ***/
 
-    runSims(inputParams, outputParams, r, numSims);
+    runSims(inputParams, outputParams, singleOutputs, r, numSims, fileOut);
 
 
     /*  summarise output parameters, then output to file*/
-    sumOutputParams(outputParams, numSims);
-    writeOutputFile(fileOut, inputParams, outputParams);
+    if (numSims > 1) {
+        sumOutputParams(outputParams, numSims);
+        writeOutputFile(fileOut, inputParams, outputParams);
+    }
 
     /*  free gsl memory     */
     gsl_rng_free(r);
@@ -47,7 +54,7 @@ int main(int argc, char **argv) {
 
 
 /** Runs all simulations using the CL and input file parameters  **/
-void runSims(int *inputParams, int *outputParams, gsl_rng *r, int numSims) {
+void runSims(int *inputParams, int *outputParams, int *singleOutputs, gsl_rng *r, int numSims, char *fileOut) {
 
     /** Parameter Values For... **/
 
@@ -110,6 +117,19 @@ void runSims(int *inputParams, int *outputParams, gsl_rng *r, int numSims) {
 
             /* increment clock for next iteration */
             clock++;
+
+            /* Output current interval data */
+            if(numSims == 1) {
+
+                singleOutputs[0] = clock;
+                singleOutputs[1] = occupiedServicePoints;
+                singleOutputs[2] = countCsmrQueue(csmrQueue, *inpMaxQueueLength);
+                singleOutputs[3] = outputParams[0];
+                singleOutputs[4] = outputParams[1];
+                singleOutputs[5] = outputParams[2];
+
+                writeSingleOutput(fileOut, singleOutputs);
+            }
         }
         /* log completed simulation outputs */
         *outpTimePostClosing += clock - *inpClosingTime;

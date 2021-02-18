@@ -5,6 +5,6 @@ closingTime         100
 
 # Additional    Parameters
 stdDiviation        3
-csmrFrequency       5
+csmrFrequency       2
 csmrWaitTolerance   18
 servicePointSpeed   24

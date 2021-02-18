@@ -5,7 +5,7 @@ int *getInputFileValues(char *fileIn) {
 
     FILE        *fileP;
     char        paramName[20];
-    static int  paramValues[4];
+    static int  paramValues[7];
 
     /* Error if file failed to open */
     if ( (fileP = fopen(fileIn, "r")) == NULL ) {
@@ -39,14 +39,18 @@ void writeOutputFile(char *fileOut, int *inputParams, int *outputParams) {
     }
 
     /* Write Input parameters to file */
-    fprintf(fileP, "%s\n\n%d\t\t| %s\n\n%d\t\t| %s\n\n%d\t\t| %s\n\n",
+    fprintf(fileP, "%s\n\n%d\t\t| %s\n%d\t\t| %s\n%d\t\t| %s\n%d\t\t| %s\n%d\t\t| %s\n%d\t\t| %s\n%d\t\t| %s\n\n",
                     "### The simulation input parameters",
                     inputParams[0],     "maxQueueLength",   
                     inputParams[1],     "numServicePoints",
-                    inputParams[2],     "closingTime");
+                    inputParams[2],     "closingTime",
+                    inputParams[3],     "stdDiviation",
+                    inputParams[4],     "csmrFrequency",
+                    inputParams[5],     "csmrWaitTolerance",
+                    inputParams[6],     "servicePointSpeed");
 
     /* Write Output parameters to file */
-    fprintf(fileP, "%s\n\n%d\t\t| %s\n\n%d\t\t| %s\n\n%d\t\t| %s\n\n%d\t\t| %s\n\n%d\t\t| %s\n",
+    fprintf(fileP, "%s\n\n%d\t\t| %s\n%d\t\t| %s\n%d\t\t| %s\n%d\t\t| %s\n%d\t\t| %s\n",
                     "### The  simulation output parameters",
                     outputParams[0],    "Number of fulfilled customers",
                     outputParams[1],    "Number of unfulfilled customers",

@@ -3,4 +3,3 @@
 #include <string.h>
 
 /*      Function Prototypes      */
-clockTick(clock);

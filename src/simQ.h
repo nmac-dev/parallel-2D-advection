@@ -1,10 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
 #include "fileIO.h"
+#include "queueSystem.h"
 
 /*      Function Prototypes      */
-int genRandom(gsl_rng *, int, int);
-void lrsArray(int (*)[2], int);
+void runSims(int *, int *, gsl_rng *, int);
+int  genRandom(gsl_rng *, int, int);
+void setArrays(int (*)[2], int *, int, int);
+void sumOutputParams(int *outputParams, int numSims);

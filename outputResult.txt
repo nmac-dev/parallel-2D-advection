@@ -13,5 +13,5 @@
 14		| Number of fulfilled customers
 6		| Number of unfulfilled customers
 2		| Number of timed-out customers
-60		| Average time for fulfilled customers
-37		| Time it to serve all customers from closing
+59		| Average time for fulfilled customers
+36		| Time it to serve all customers from closing

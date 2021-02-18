@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-/*      Function Prototypes      */
+/**      Function Prototypes      **/
 extern int* getInputFileValues(char *);
 void writeOutputFile(char *, int *, int *);

@@ -7,4 +7,4 @@
 
 /*      Function Prototypes      */
 int genRandom(gsl_rng *, int, int);
-void lrsArray(int *, int);
+void lrsArray(int (*)[2], int);

@@ -1,17 +1,17 @@
 ### The simulation input parameters
 
-20		| maxQueueLength
-1		| numServicePoints
+10		| maxQueueLength
+3		| numServicePoints
 100		| closingTime
-6		| stdDiviation
-2		| csmrFrequency
-8		| csmrWaitTolerance
-10		| servicePointSpeed
+3		| stdDiviation
+5		| csmrFrequency
+18		| csmrWaitTolerance
+24		| servicePointSpeed
 
 ### The  simulation output parameters
 
-8		| Number of fulfilled customers
-0		| Number of unfulfilled customers
-9		| Number of timed-out customers
--31		| Average time for fulfilled customers
-0		| Time it to serve all customers from closing
+14		| Number of fulfilled customers
+6		| Number of unfulfilled customers
+2		| Number of timed-out customers
+60		| Average time for fulfilled customers
+37		| Time it to serve all customers from closing

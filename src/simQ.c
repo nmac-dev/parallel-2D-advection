@@ -36,59 +36,52 @@ int main(int argc, char **argv) {
     
 
     int *outputParams = runSim(inputParams, gsl_rng *r, numSims);
-
-    writeOutputFile(fileOut, inputParams, outputParams);
                     ********************/
 
-    /*  free gsl memory     *
-    gsl_rng_free(r);*/
 
 /************* sim below here ****************/
 
     /*  input file parameter values */
-    int *inPMaxQueueLength      = inputParams + 0,
-        *inPNumServicePoints    = inputParams + 1,
-        *inPClosingTime         = inputParams + 2,
+    int *inpMaxQueueLength      = inputParams + 0,
+        *inpNumServicePoints    = inputParams + 1,
+        *inpClosingTime         = inputParams + 2,
 
-        *inPStdDiviation        = inputParams + 3,
-        *inPCsmrFrequency       = inputParams + 4,
-        *inPCsmrWaitTolerance   = inputParams + 5,
-        *inPServicePointSpeed   = inputParams + 6;
+        *inpStdDiviation        = inputParams + 3,
+        *inpCsmrFrequency       = inputParams + 4,
+        *inpCsmrWaitTolerance   = inputParams + 5,
+        *inpServicePointSpeed   = inputParams + 6;
 
     /*  output file parameter values */
-    int *outPCsmrFulfilled      = outputParams + 0,
-        *outPCsmrUnfulfilled    = outputParams + 1,
-        *outPCsmrTimedOut       = outputParams + 2,
-        *outPAverageWaitTime    = outputParams + 3,
-        *outPTimePostClosing    = outputParams + 4;
+    int *outpCsmrFulfilled      = outputParams + 0,
+        *outpCsmrUnfulfilled    = outputParams + 1,
+        *outpCsmrTimedOut       = outputParams + 2,
+        *outpAverageWaitTime    = outputParams + 3,
+        *outpTimePostClosing    = outputParams + 4;
     
     int singleSim, i, j;
 
     /*  1 iteration == 1 simulation */
     for (singleSim = 0; singleSim < numSims; singleSim++) {
 
-        int queue[*inPMaxQueueLength],
-            servicePoint[*inPNumServicePoints],
+        /* 0:[customer wait time] 1:[customer arrival time] */
+        int queue[*inpMaxQueueLength][2],
+            servicePoint[*inpNumServicePoints],
             clock                   = 0,
             occupiedServicePoints   = 0,
-            nextCustomerArrival     = genRandom(r, *inPCsmrFrequency, *inPStdDiviation);
+            nextCustomerArrival     = genRandom(r, *inpCsmrFrequency, *inpStdDiviation);
 
-                printf("NCA: %d\n", nextCustomerArrival);
-
-        for(i = 0; i < *inPMaxQueueLength; i++) {
-            queue[i] = -1;
+        for(i = 0; i < *inpMaxQueueLength; i++) {
+            queue[i][0] = -1;
         }
-        for(i = 0; i < *inPNumServicePoints; i++) {
+        for(i = 0; i < *inpNumServicePoints; i++) {
             servicePoint[i] = -1;
         }
 
         /* Loop until the single simulation is complete */
-        while(clock < *inPClosingTime) {
-
-            printf("Clock: %d\n",  clock + 1);
+        while(clock < *inpClosingTime || occupiedServicePoints > 0) {
 
             /********************* service point management */
-            for(i = 0; i < *inPNumServicePoints; i++) {
+            for(i = 0; i < *inpNumServicePoints; i++) {
                 
 
                /* printf("SP%d: %d\n", i + 1, servicePoint[i]);
@@ -97,53 +90,49 @@ int main(int argc, char **argv) {
                     empty service point if complete */
                 if(clock == servicePoint[i]) {
 
-                    printf("NEW_CSMR-SP: %d\n", i +1);
                     servicePoint[i] = -1;
                     occupiedServicePoints--;
 
                 }
 
                 /* Fill service point if empty, with waiting customer */
-                if(servicePoint[i] == -1 && queue[*inPMaxQueueLength -1] > -1) {
+                if(servicePoint[i] == -1 && queue[*inpMaxQueueLength -1][0] > -1) {
 
-                    printf("SP-COMPLETED: %d\n", queue[*inPMaxQueueLength -1]);
-
-                    /* log wait time for customer                   TODO LOG arival time*/
-                    *outPAverageWaitTime += clock - queue[*inPMaxQueueLength -1];
                 
                     /* move customer to service point, generate service time */
-                    servicePoint[i] = clock + genRandom(r, *inPServicePointSpeed ,*inPStdDiviation);
+                    servicePoint[i] = clock + genRandom(r, *inpServicePointSpeed ,*inpStdDiviation);
                     occupiedServicePoints++;
+                    
+                    /* log wait time for customer       */
+                    *outpAverageWaitTime += queue[*inpMaxQueueLength -1][1] + (clock - queue[*inpMaxQueueLength -1][0]);
 
                     /* shift queue */
-                    lrsArray(queue, *inPMaxQueueLength);
+                    lrsArray(queue, *inpMaxQueueLength);
 
 
                     /* log customer has been fulfilled */
-                    *outPCsmrFulfilled += + 1;
+                    *outpCsmrFulfilled += + 1;
                     
                 }
 
             }
             /********************* csmr queue managment     */
-            for(i = 0; i < *inPMaxQueueLength; i++) {
+            for(i = 0; i < *inpMaxQueueLength; i++) {
 
                 /*  FUNC 
                     Customer leaves */
-                if(clock == queue[i]) {
-                    
-                    printf("CSMR-TO: %d\n", queue[i]);
+                if(clock == queue[i][0]) {
 
                     /* shift queue */
                     lrsArray(queue, i);
 
                     /*  log custmer timed out   */
-                    *outPCsmrTimedOut+= + 1;
+                    *outpCsmrTimedOut+= + 1;
                 }
 
 
                 /* suffle queue empty spaces */
-                if(queue[i] == -1) {
+                if(queue[i][0] == -1) {
                     lrsArray(queue, i);
                 }
 
@@ -152,41 +141,52 @@ int main(int argc, char **argv) {
             /* Accept or Decline New customer */
             if (clock == nextCustomerArrival) {
 
-                /* Accept   */
-                if (queue[0] == -1) {
-                    printf("CSMR-Accepted++\n");
-                    queue[0] = clock + genRandom(r, *inPCsmrWaitTolerance, *inPStdDiviation);
+                /* Accept  | if (space in queue & not closed) */
+                if (queue[0][0] == -1 && clock <= *inpClosingTime) {
+
+                    queue[0][0] = clock + genRandom(r, *inpCsmrWaitTolerance, *inpStdDiviation);
+                    /* store arrival time */
+                    queue[0][1] = queue[0][0];
                 }
                 /* Decline  */
                 else {
-                    printf("CSMR-Declined--\n");
-                    *outPCsmrUnfulfilled+= + 1;;
+                    *outpCsmrUnfulfilled+= + 1;;
                 }
-                nextCustomerArrival = clock + genRandom(r, *inPCsmrFrequency, *inPStdDiviation);
-                printf("NCA-@: %d\n", nextCustomerArrival);
+                nextCustomerArrival = clock + genRandom(r, *inpCsmrFrequency, *inpStdDiviation);
             }
 
             clock++;
         }
-        *outPTimePostClosing = clock - *inPClosingTime;
+        /* log completed simulation outputs */
+        *outpTimePostClosing += clock - *inpClosingTime;
     }
-    
-    /* output simulation result *
-    if (numSims > 1) {
-        for(i = 0; i < 5; i++){
-            outputParams[i] = (outputParams[i] / numSims);
-        }
-    } */
+
+    /************* sim end ****************/
+
 
         printf("OUTPUT:\n%d\n%d\n%d\n%d\n%d\n", 
-                        *outPCsmrFulfilled,
-                        *outPCsmrUnfulfilled,
-                        *outPCsmrTimedOut, 
-                        *outPAverageWaitTime, 
-                        *outPTimePostClosing);
+                        *outpCsmrFulfilled,
+                        *outpCsmrUnfulfilled,
+                        *outpCsmrTimedOut, 
+                        *outpAverageWaitTime, 
+                        *outpTimePostClosing);
+
+    /*  turn each putput parameter into an average */
+
+    *outpAverageWaitTime =  (*outpAverageWaitTime * numSims) / *outpCsmrFulfilled;
+    for(i = 0; i < 5; i++) {
+        outputParams[i] = outputParams[i] / numSims;
+    }
+        printf("OUTPUT:\n%d\n%d\n", 
+                        outputParams[3],
+                        outputParams[4]);
 
     writeOutputFile(fileOut, inputParams, outputParams);
 
+    /*  free gsl memory     */
+    gsl_rng_free(r);
+
+    /*  exit program with success */
     exit(EXIT_SUCCESS);
 }
 
@@ -194,11 +194,14 @@ int genRandom(gsl_rng *r, int lowerLimit, int diviation) {
     return (int)gsl_ran_gaussian_tail(r, lowerLimit ,diviation);
 }
 
-void lrsArray(int *array, int position) {
+void lrsArray(int array[][2], int position) {
         
         int i;
         for(i = position; i > -1; i--) {
-            array[i] = array[i - 1];
+            /* wait time    */
+            array[i][0] = array[i - 1][0];
+            /* arrival time */
+            array[i][1] = array[i - 1][1];
         }
-        array[0] = -1;
+        array[0][0] = -1;
 }

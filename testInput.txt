@@ -1,10 +1,10 @@
 # Specification Parameters
-maxQueueLength      20
-numServicePoints    1
+maxQueueLength      10
+numServicePoints    3
 closingTime         100
 
 # Additional    Parameters
-stdDiviation        6
-csmrFrequency       2
-csmrWaitTolerance   8
-servicePointSpeed   10
+stdDiviation        3
+csmrFrequency       5
+csmrWaitTolerance   18
+servicePointSpeed   24

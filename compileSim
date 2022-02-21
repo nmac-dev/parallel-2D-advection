@@ -1,8 +1,0 @@
-#!/bin/sh
-## compile ##
-clear                                                                               \
- && gcc -ansi -I./src -c ./src/fileIO.c -o ./bin/fileIO.o                           \
- && gcc -ansi -I./src -c ./src/queueSystem.c -o ./bin/queueSystem.o                 \
- && gcc -ansi -I./src -c ./src/simQ.c   -o ./bin/simQ.o                             \
- && gcc bin/fileIO.o bin/queueSystem.o bin/simQ.o   -lgsl -lgslcblas    -o bin/simQ \
- && echo "Complete"

@@ -77,12 +77,12 @@ int main()
 	float dt = CFL / ((fabs(velx) / dx) + (fabs(vely) / dy));
 
 	/*** Report information about the calculation ***/
-	printf("Grid spacing dx		= %g\n", dx);
-	printf("Grid spacing dy		= %g\n", dy);
-	printf("CFL number			= %g\n", CFL);
-	printf("Time step			= %g\n", dt);
-	printf("No. of time steps	= %d\n", nsteps);
-	printf("End time			= %g\n", dt * (float)nsteps);
+	printf("Grid spacing dx     = %g\n", dx);
+	printf("Grid spacing dy     = %g\n", dy);
+	printf("CFL number          = %g\n", CFL);
+	printf("Time step           = %g\n", dt);
+	printf("No. of time steps   = %d\n", nsteps);
+	printf("End time            = %g\n", dt * (float)nsteps);
 	printf("Distance advected x = %g\n", velx * dt * (float)nsteps);
 	printf("Distance advected y = %g\n", vely * dt * (float)nsteps);
 

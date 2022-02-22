@@ -29,26 +29,26 @@ int main()
 {
 
 	/* Grid properties */
-	const int NX = 1000;		// Number of x points
-	const int NY = 1000;		// Number of y points
+	const int NX = 1000;	// Number of x points
+	const int NY = 1000;	// Number of y points
 	const float xmin = 0.0; // Minimum x value
 	const float xmax = 1.0; // Maximum x value
 	const float ymin = 0.0; // Minimum y value
 	const float ymax = 1.0; // Maximum y value
 
 	/* Parameters for the Gaussian initial conditions */
-	const float x0 = 0.1;									// Centre(x)
-	const float y0 = 0.1;									// Centre(y)
-	const float sigmax = 0.03;						 // Width(x)
-	const float sigmay = 0.03;						 // Width(y)
-	const float sigmax2 = sigmax * sigmax; // Width(x) squared
-	const float sigmay2 = sigmay * sigmay; // Width(y) squared
+	const float x0 = 0.1;					// Centre(x)
+	const float y0 = 0.1;					// Centre(y)
+	const float sigmax = 0.03;				// Width(x)
+	const float sigmay = 0.03;				// Width(y)
+	const float sigmax2 = sigmax * sigmax;	// Width(x) squared
+	const float sigmay2 = sigmay * sigmay;	// Width(y) squared
 
 	/* Boundary conditions */
 	const float bval_left = 0.0;	// Left boudnary value
-	const float bval_right = 0.0; // Right boundary value
-	const float bval_lower = 0.0; // Lower boundary
-	const float bval_upper = 0.0; // Upper bounary
+	const float bval_right = 0.0; 	// Right boundary value
+	const float bval_lower = 0.0; 	// Lower boundary
+	const float bval_upper = 0.0; 	// Upper bounary
 
 	/* Time stepping parameters */
 	const float CFL = 0.9;	 // CFL number
@@ -60,9 +60,9 @@ int main()
 
 	/* Arrays to store variables. These have NX+2 elements
 		 to allow boundary values to be stored at both ends */
-	float x[NX + 2];						// x-axis values
-	float y[NX + 2];						// y-axis values
-	float u[NX + 2][NY + 2];		// Array of u values
+	float x[NX + 2];			// x-axis values
+	float y[NX + 2];			// y-axis values
+	float u[NX + 2][NY + 2];	// Array of u values
 	float dudt[NX + 2][NY + 2]; // Rate of change of u
 
 	float x2; // x squared (used to calculate iniital conditions)

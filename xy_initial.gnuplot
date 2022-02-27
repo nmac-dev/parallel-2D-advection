@@ -9,8 +9,8 @@ set terminal png enhanced
 set output "initial.png"
 
 # Set axes ranges
-set xrange [0:1.0]
-set yrange [0:1.0]
+set xrange [0:30.0]
+set yrange [0:30.0]
 
 # Set axes labels
 set xlabel "Horizontal (x)"

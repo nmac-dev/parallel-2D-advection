@@ -8,22 +8,22 @@ int main()
 	/**
 	 * Grid properties
 	 */
-	const int NX = 1000;	  // Number of x points
-	const int NY = 1000;	  // Number of y points
-	const float MIN_X = 0.0f; // Minimum x value
-	const float MAX_X = 1.0f; // Maximum x value
-	const float MIN_Y = 0.0f; // Minimum y value
-	const float MAX_Y = 1.0f; // Maximum y value
+	const int NX = 1000;	   // Number of x points
+	const int NY = 1000;	   // Number of y points
+	const float MIN_X = 0.0f;  // Minimum x value
+	const float MAX_X = 30.0f; // Maximum x value
+	const float MIN_Y = 0.0f;  // Minimum y value
+	const float MAX_Y = 30.0f; // Maximum y value
 
 	/**
 	 * Parameters for the Gaussian initial conditions
 	 */
-	const float CENTER_X = 0.1f;			  // Center(x)
-	const float CENTER_Y = 0.1f;			  // Center(y)
-	const float SIGMA_X  = 0.03f;			  // WiTIME_STEPh(x)
-	const float SIGMA_Y  = 0.03f;			  // WiTIME_STEPh(y)
-	const float SIGMA_X2 = SIGMA_X * SIGMA_X; // WiTIME_STEPh(x) squared
-	const float SIGMA_Y2 = SIGMA_Y * SIGMA_Y; // WiTIME_STEPh(y) squared
+	const float CENTER_X = 3.0f;			  // Center(x)
+	const float CENTER_Y = 15.0f;			  // Center(y)
+	const float SIGMA_X  = 1.0f;			  // Width(x)
+	const float SIGMA_Y  = 5.0f;			  // Width(y)
+	const float SIGMA_X2 = SIGMA_X * SIGMA_X; // Width(x) squared
+	const float SIGMA_Y2 = SIGMA_Y * SIGMA_Y; // Width(y) squared
 
 	/** 
 	 * Boundary conditions
@@ -37,13 +37,13 @@ int main()
 	 * Time stepping parameters 
 	 */
 	const float CFL = 0.9f;	  // CFL number
-	const int N_STEPS = 1500; // Number of time steps
+	const int N_STEPS = 800; // Number of time steps
 
 	/**
 	 * Velocity
 	 */
-	const float VEL_X = 0.01f; // Velocity in x direction
-	const float VEL_Y = 0.01f; // Velocity in y direction
+	const float VEL_X = 1.0f; // Velocity in x direction
+	const float VEL_Y = 0.0f; // Velocity in y direction
 
 	/**
 	 * Calculate distance between points

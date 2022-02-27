@@ -40,13 +40,13 @@ int main()
 	 * Time stepping parameters 
 	 */
 	const float CFL = 0.9f;	  // CFL number
-	const int N_STEPS = 800; // Number of time steps
+	const int N_STEPS = 800;  // Number of time steps
 
 	/**
 	 * Velocity
 	 */
 	const float VEL_X = calc_vel_x(MAX_Y); // Velocity in x direction
-	const float VEL_Y = 0.0f; // Velocity in y direction
+	const float VEL_Y = 0.0f;			   // Velocity in y direction
 
 	/**
 	 * Calculate distance between points
@@ -62,8 +62,8 @@ int main()
 	/**
 	 * Arrays to store variables, NX+2 elements to allow boundary values to be stored at both ends 
 	 */
-	float x_vals[NX + 2];			// x-axis values
-	float y_vals[NX + 2];			// y-axis values
+	float x_axis[NX + 2];			// x-axis values
+	float y_axis[NX + 2];			// y-axis values
 	float u_vals[NX + 2][NY + 2];	// Array of u values
 	float  roc_u[NX + 2][NY + 2];	// Rate of change of u
 
@@ -88,7 +88,7 @@ int main()
 	/// LOOP 1
 	for (int i = 0; i < NX + 2; i++)
 	{
-		x_vals[i] = ((float)i - 0.5f) * DIST_X;
+		x_axis[i] = ((float)i - 0.5f) * DIST_X;
 	}
 
 	/**
@@ -97,7 +97,7 @@ int main()
 	/// LOOP 2
 	for (int j = 0; j < NY + 2; j++)
 	{
-		y_vals[j] = ((float)j - 0.5f) * DIST_Y;
+		y_axis[j] = ((float)j - 0.5f) * DIST_Y;
 	}
 
 	/**
@@ -108,8 +108,8 @@ int main()
 	{
 		for (int j = 0; j < NY + 2; j++)
 		{
-			sq_x2 = (x_vals[i] - CENTER_X) * (x_vals[i] - CENTER_X);
-			sq_y2 = (y_vals[j] - CENTER_Y) * (y_vals[j] - CENTER_Y);
+			sq_x2 = (x_axis[i] - CENTER_X) * (x_axis[i] - CENTER_X);
+			sq_y2 = (y_axis[j] - CENTER_Y) * (y_axis[j] - CENTER_Y);
 			u_vals[i][j] = exp(-1.0f * ((sq_x2 / (2.0f * SIGMA_X2)) + (sq_y2 / (2.0f * SIGMA_Y2))));
 		}
 	}
@@ -124,7 +124,7 @@ int main()
 	{
 		for (int j = 0; j < NY + 2; j++)
 		{
-			fprintf(initial_file, "%g %g %g\n", x_vals[i], y_vals[j], u_vals[i][j]);
+			fprintf(initial_file, "%g %g %g\n", x_axis[i], y_axis[j], u_vals[i][j]);
 		}
 	}
 	fclose(initial_file);
@@ -135,7 +135,6 @@ int main()
 	/// LOOP 5
 	for (int m = 0; m < N_STEPS; m++)
 	{
-
 		/**
 		 * Apply boundary conditions at u_vals[0][:] and u_vals[NX+1][:]
 		 */
@@ -165,7 +164,7 @@ int main()
 		{
 			for (int j = 1; j < NY + 1; j++)
 			{
-				roc_u[i][j] = -calc_vel_x(y_vals[j]) * (u_vals[i][j] - u_vals[i - 1][j]) / DIST_X - VEL_Y * (u_vals[i][j] - u_vals[i][j - 1]) / DIST_Y;
+				roc_u[i][j] = -calc_vel_x(y_axis[j]) * (u_vals[i][j] - u_vals[i - 1][j]) / DIST_X - VEL_Y * (u_vals[i][j] - u_vals[i][j - 1]) / DIST_Y;
 			}
 		}
 
@@ -193,7 +192,7 @@ int main()
 	{
 		for (int j = 0; j < NY + 2; j++)
 		{
-			fprintf(final_file, "%g %g %g\n", x_vals[i], y_vals[j], u_vals[i][j]);
+			fprintf(final_file, "%g %g %g\n", x_axis[i], y_axis[j], u_vals[i][j]);
 		}
 	}
 	fclose(final_file);

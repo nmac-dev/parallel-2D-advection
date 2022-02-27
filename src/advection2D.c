@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <math.h>
 
+/// Prototypes
+float calc_vel_x(float height);
+
 int main()
 {
 	/**
@@ -42,7 +45,7 @@ int main()
 	/**
 	 * Velocity
 	 */
-	const float VEL_X = 1.0f; // Velocity in x direction
+	const float VEL_X = calc_vel_x(MAX_Y); // Velocity in x direction
 	const float VEL_Y = 0.0f; // Velocity in y direction
 
 	/**
@@ -162,7 +165,7 @@ int main()
 		{
 			for (int j = 1; j < NY + 1; j++)
 			{
-				roc_u[i][j] = -VEL_X * (u_vals[i][j] - u_vals[i - 1][j]) / DIST_X - VEL_Y * (u_vals[i][j] - u_vals[i][j - 1]) / DIST_Y;
+				roc_u[i][j] = -calc_vel_x(y_vals[j]) * (u_vals[i][j] - u_vals[i - 1][j]) / DIST_X - VEL_Y * (u_vals[i][j] - u_vals[i][j - 1]) / DIST_Y;
 			}
 		}
 
@@ -196,4 +199,25 @@ int main()
 	fclose(final_file);
 
 	return 0;
+}
+
+/**
+ * @brief Calculates the horizontal velocity using a logarithmic profile (adds vertical shear)
+ *
+ * @param height y axis value
+ */ 
+float calc_vel_x(float height)
+{
+	const float F_VEL    = 0.2f;  // Friction velocity (meters per second)
+	const float R_LEN    = 1.0f;  // Roughness length 
+	const float VK_CONST = 0.41f; // Von Karman's constant
+
+	float vel_x = 0;
+
+	/// Apply log profile if height is greater than roughness length
+	if (height > R_LEN)
+	{
+		vel_x = (F_VEL / VK_CONST) * logf(height / R_LEN);
+	}
+	return vel_x;
 }

@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 
 /// Prototypes
 float calc_vel_x(float height);
@@ -66,6 +67,7 @@ int main()
 	float y_axis[NX + 2];			// y-axis values
 	float u_vals[NX + 2][NY + 2];	// Array of u values
 	float  roc_u[NX + 2][NY + 2];	// Rate of change of u
+	float *u_vad = (float *)calloc(NX, sizeof(float)); // Stores vertical averages for u_vals[x,y] (calloc: init indexes as 0)
 
 	float sq_x2; // x squared (used to calculate iniital conditions)
 	float sq_y2; // y squared (used to calculate iniital conditions)
@@ -169,7 +171,7 @@ int main()
 		}
 
 		/**
-		 * Update u from t to t+TIME_STEP
+		 * Update u from t to t+TIME_STEP & Calculate vertically averaged distribution
 		 * 	Loop over points in the domain but not boundary values
 		 */
 		/// LOOP 9
@@ -178,7 +180,9 @@ int main()
 			for (int j = 1; j < NY + 1; j++)
 			{
 				u_vals[i][j] = u_vals[i][j] + roc_u[i][j] * TIME_STEP;
+				u_vad[i - 1] += u_vals[i][j];	// Sum vertical u values (y)
 			}
+			u_vad[i - 1] /= NY; // Divide sum by total points of y to get vertical average
 		}
 	}
 
@@ -196,6 +200,20 @@ int main()
 		}
 	}
 	fclose(final_file);
+
+	/**
+	 * Write array for vertically averaged distribution of u_vals[x,y] out to file
+	 */
+	FILE *v_averaged_file;
+	v_averaged_file = fopen("v_averaged.dat", "w");
+	/// LOOP 11
+	for (int i = 0; i < NX; i++)
+	{
+		fprintf(v_averaged_file, "%g %g\n", x_axis[i], u_vad[i]);
+	}
+	fclose(v_averaged_file);
+
+	free(u_vad);
 
 	return 0;
 }

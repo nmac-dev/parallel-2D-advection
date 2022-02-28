@@ -44,7 +44,7 @@ For example material emitted from a chimmey is advected at different horizontal 
 thus simulating the movement of a cloud of material in the atmospheric boundary layer.
 
 ## Plots
-The final plots for the 2D advection with all modifications implemented
+The final plots for the 2D advection with all modifications implemented. (all stages can be found in the `plots` directory)
 | Initial | Final | Vertically Averaged Distribution |
 | :-: | :-: | :-: |
 | <img alt="Intial" src="plots/3 - adding vertical shear/initial.png"> | <img alt="Intial" src="plots/3 - adding vertical shear/final.png"> | <img alt="Intial" src="plots/4 - vertical avg distro/v_averaged.png"> |

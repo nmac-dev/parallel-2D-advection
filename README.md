@@ -83,7 +83,8 @@ The initial calculation was not particularly realistic. Several configuration mo
 | VEL_Y    | 0.01 | 0.0  |
 
 ### Adding Vertical Shear
-To simulate a realistic advection, modifications are implimented so the horizontal velocity varies with height.
+To simulate a realistic advection, modifications are implimented so the horizontal velocity varies with height.  
+NB: Added (A) / Modified (M)
 |A/M|     Name     | Desc                                                                                 |
 |:-:|     --:      |    :--                                                                               |
 | A | calc_vel_x() | Calculates the horizontal velocity using a logarithmic profile (adds vertical shear) |
@@ -91,8 +92,7 @@ To simulate a realistic advection, modifications are implimented so the horizont
 | A | R_LEN        | Roughness length                                                                     |
 | A | VK_CONST     | Von Karman's constant                                                                |
 | M | VEL_X        | Calls 'calc_vel_x()' instead of using a literal value                                |
-| M | Loop 8       | Horizontal velocity is calculated using 'calc_vel_x()' instead of a constant         |
-NB: A = Added, M = Modified
+| M | Loop 8       | Horizontal velocity is calculated using 'calc_vel_x()' instead of a constant         |  
 
 ### Calculating Vertically Averaged Distribution
 To understand the advection better, an additional plot is created for the horizontal profile of advected material see [Plots](#Plots)

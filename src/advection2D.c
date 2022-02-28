@@ -66,9 +66,9 @@ int main()
 	 */
 	float x_axis[NX + 2];			// x-axis values
 	float y_axis[NX + 2];			// y-axis values
-	float u_vals[NX + 2][NY + 2];	// Array of u values
+	float u_val[NX + 2][NY + 2];	// Array of u values
 	float  roc_u[NX + 2][NY + 2];	// Rate of change of u
-	float *u_vad = (float *)calloc(NX, sizeof(float)); // Stores vertical averages for u_vals[x,y] (calloc: init indexes as 0)
+	float *vavg_u = (float *)calloc(NX, sizeof(float)); // Stores vertical averages for u_val[x,y] (calloc: init indexes as 0)
 
 	float sq_x2; // x squared (used to calculate iniital conditions)
 	float sq_y2; // y squared (used to calculate iniital conditions)
@@ -90,7 +90,7 @@ int main()
 	 *	default(none) NO LONGER predetermines "const variables with no mutable members" as shared (breaking backwards compatibility)
 	 *	To implement a program which compiles for any GCC version, any const variables will be declared as "firstprivate"
 	 */
-	#pragma omp parallel default(none) shared(x_axis, y_axis, u_vals) \
+	#pragma omp parallel default(none) shared(x_axis, y_axis, u_val) \
 				firstprivate(NX, NY, DIST_X, DIST_Y, CENTER_X, CENTER_Y, SIGMA_X2, SIGMA_Y2)
 	{
 		/**
@@ -124,7 +124,7 @@ int main()
 			{
 				sq_x2 = (x_axis[i] - CENTER_X) * (x_axis[i] - CENTER_X);
 				sq_y2 = (y_axis[j] - CENTER_Y) * (y_axis[j] - CENTER_Y);
-				u_vals[i][j] = exp(-1.0f * ((sq_x2 / (2.0f * SIGMA_X2)) + (sq_y2 / (2.0f * SIGMA_Y2))));
+				u_val[i][j] = exp(-1.0f * ((sq_x2 / (2.0f * SIGMA_X2)) + (sq_y2 / (2.0f * SIGMA_Y2))));
 			}
 		}
 	}
@@ -142,7 +142,7 @@ int main()
 	{
 		for (int j = 0; j < NY + 2; j++)
 		{
-			fprintf(initial_file, "%g %g %g\n", x_axis[i], y_axis[j], u_vals[i][j]);
+			fprintf(initial_file, "%g %g %g\n", x_axis[i], y_axis[j], u_val[i][j]);
 		}
 	}
 	fclose(initial_file);
@@ -151,7 +151,7 @@ int main()
 	 * Process rows sequentially and columns in parallel
 	 *	placing the parallel block in the outer scope of the sequential loop reduces overhead for calling threads
 	 */
-	#pragma omp parallel default(none) shared(x_axis, y_axis, u_vals, roc_u, u_vad) \
+	#pragma omp parallel default(none) shared(x_axis, y_axis, u_val, roc_u, vavg_u) \
 			firstprivate(NX, NY, DIST_X, DIST_Y, VEL_Y, N_STEPS, TIME_STEP, BVAL_LEFT, BVAL_RIGHT, BVAL_LOWER, BVAL_UPPER)
 	{
 		/**
@@ -164,25 +164,25 @@ int main()
 		for (int m = 0; m < N_STEPS; m++)
 		{
 			/**
-			* Apply boundary conditions at u_vals[0][:] and u_vals[NX+1][:]
+			* Apply boundary conditions at u_val[0][:] and u_val[NX+1][:]
 			*/
 			/// LOOP 6
 			#pragma omp for
 			for (int j = 0; j < NY + 2; j++)
 			{
-				u_vals[0][j] = BVAL_LEFT;
-				u_vals[NX + 1][j] = BVAL_RIGHT;
+				u_val[0][j] = BVAL_LEFT;
+				u_val[NX + 1][j] = BVAL_RIGHT;
 			}
 
 			/**
-			* Apply boundary conditions at u_vals[:][0] and u_vals[:][NY+1]
+			* Apply boundary conditions at u_val[:][0] and u_val[:][NY+1]
 			*/
 			/// LOOP 7
 			#pragma omp for
 			for (int i = 0; i < NX + 2; i++)
 			{
-				u_vals[i][0] = BVAL_LOWER;
-				u_vals[i][NY + 1] = BVAL_UPPER;
+				u_val[i][0] = BVAL_LOWER;
+				u_val[i][NY + 1] = BVAL_UPPER;
 			}
 
 			/** 
@@ -195,7 +195,8 @@ int main()
 			{
 				for (int j = 1; j < NY + 1; j++)
 				{
-					roc_u[i][j] = -calc_vel_x(y_axis[j]) * (u_vals[i][j] - u_vals[i - 1][j]) / DIST_X - VEL_Y * (u_vals[i][j] - u_vals[i][j - 1]) / DIST_Y;
+					roc_u[i][j] = -calc_vel_x(y_axis[j]) * (u_val[i][j] - u_val[i - 1][j]) / DIST_X 
+								  - VEL_Y * (u_val[i][j] - u_val[i][j - 1]) / DIST_Y;
 				}
 			}
 
@@ -209,10 +210,10 @@ int main()
 			{
 				for (int j = 1; j < NY + 1; j++)
 				{
-					u_vals[i][j] = u_vals[i][j] + roc_u[i][j] * TIME_STEP;
-					u_vad[i - 1] += u_vals[i][j];	// Sum vertical u values (y)
+					u_val[i][j] = u_val[i][j] + roc_u[i][j] * TIME_STEP;
+					vavg_u[i - 1] += u_val[i][j];	// Sum vertical u values (y)
 				}
-				u_vad[i - 1] /= NY; // Divide sum by total points of y to get vertical average
+				vavg_u[i - 1] /= NY; // Divide sum by total points of y to get vertical average
 			}
 		}
 	}
@@ -228,13 +229,13 @@ int main()
 	{
 		for (int j = 0; j < NY + 2; j++)
 		{
-			fprintf(final_file, "%g %g %g\n", x_axis[i], y_axis[j], u_vals[i][j]);
+			fprintf(final_file, "%g %g %g\n", x_axis[i], y_axis[j], u_val[i][j]);
 		}
 	}
 	fclose(final_file);
 
 	/**
-	 * Write array for vertically averaged distribution of u_vals[x,y] out to file
+	 * Write array for vertically averaged distribution of u_val[x,y] out to file
 	 */
 	FILE *v_averaged_file;
 	v_averaged_file = fopen("v_averaged.dat", "w");
@@ -242,11 +243,11 @@ int main()
 	///   No parallel implementation: same case as LOOP 4
 	for (int i = 0; i < NX; i++)
 	{
-		fprintf(v_averaged_file, "%g %g\n", x_axis[i], u_vad[i]);
+		fprintf(v_averaged_file, "%g %g\n", x_axis[i], vavg_u[i]);
 	}
 	fclose(v_averaged_file);
 
-	free(u_vad);
+	free(vavg_u);
 
 	return 0;
 }

@@ -18,6 +18,7 @@ EXE=$OUT_DIR/$TARGET     # exe
 ## GNUPlot subscripts
 P_INIT="xy_initial.gnuplot" # intial plot script
  P_FIN="xy_final.gnuplot"   # final  plot script
+P_VAVG="v_averaged.gnuplot" # vertically averaged distribution plot script 
 
 ### Build
 
@@ -35,6 +36,7 @@ echo $'\n'"Plotting Data . . ."
 (set -x; 
     gnuplot ../$P_INIT;
     gnuplot ../$P_FIN;
+    gnuplot ../$P_VAVG;
 );
 
 ## Remove files
@@ -43,4 +45,4 @@ rm *.dat $TARGET;
 ## Return
 cd ../
 echo $'\n'"SUCCESS!"
-echo "See .png files inside the 'bin' directory for generated plots"
+echo "See .png files inside the 'out' directory for generated plots"

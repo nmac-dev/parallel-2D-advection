@@ -3,7 +3,8 @@
 ### Variables
 
 ## Compiler
-CSTD="-std=c99"     # C standard
+CSTD="-std=c99"    # C standard
+OPENMP="-fopenmp"  # Use OpenMP
 CLINK="-lm"        # links library file 
 
 ## Directories
@@ -24,7 +25,7 @@ P_VAVG="v_averaged.gnuplot" # vertically averaged distribution plot script
 
 ## Compile
 echo $'\n'"Compling . . ."
-(set -x; gcc $CSTD $SRC -o $EXE $CLINK);
+(set -x; gcc $CSTD $OPENMP $SRC -o $EXE $CLINK);
 
 ## Run
 echo $'\n'"Running program . . ."

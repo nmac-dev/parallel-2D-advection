@@ -15,7 +15,7 @@ A 2D advection program which advects a Gaussian u(x,y) at a fixed velocity
 
 ## How To Run?
 In a terminal...
- * Navigate to the `openmp-2D-advection` directory
+ * Navigate to the `parallel-2D-advection` directory
  * Use the command `bash build.sh`
    - If a permission error is given, use the command `chmod +x` and try again
  * Wait for the terminal to report the process was successful
@@ -40,7 +40,7 @@ For example material emitted from a chimmey is advected at different horizontal 
    - [Atmospheric Boundary Layer](https://en.wikipedia.org/wiki/Planetary_boundary_layer)
    - [Wind-Log-Profiles](https://en.wikipedia.org/wiki/Log_wind_profile)
   
-`openmp-2D-advection` implements its own version of a numerical solution to calculate the advection equation,
+`parallel-2D-advection` implements its own version of a numerical solution to calculate the advection equation,
 thus simulating the movement of a cloud of material in the atmospheric boundary layer.
 
 ## Plots

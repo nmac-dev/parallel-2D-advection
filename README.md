@@ -1,4 +1,4 @@
-# openmp-2D-advection
+# parallel-2D-advection
 A 2D advection program which advects a Gaussian u(x,y) at a fixed velocity
   
 ## Content
